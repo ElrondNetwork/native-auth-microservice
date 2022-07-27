@@ -12,8 +12,6 @@ import { QueueWorkerModule } from './workers/queue.worker.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { SocketAdapter } from './websockets/socket.adapter';
 import cookieParser from 'cookie-parser';
-import { CacheWarmerModule } from './crons/cache.warmer/cache.warmer.module';
-import { TransactionProcessorModule } from './crons/transaction.processor/transaction.processor.module';
 import { LoggingInterceptor, CachingInterceptor, CachingService, LoggerInitializer, MetricsService, JwtAuthenticateGlobalGuard } from '@elrondnetwork/erdnest';
 import { PubSubListenerModule } from './common/pubsub/pub.sub.listener.module';
 import { ErdnestConfigServiceImpl } from './common/api-config/erdnest.config.service.impl';
@@ -79,16 +77,6 @@ async function bootstrap() {
   if (apiConfigService.getIsPrivateApiFeatureActive()) {
     const privateApp = await NestFactory.create(PrivateAppModule);
     await privateApp.listen(apiConfigService.getPrivateApiFeaturePort());
-  }
-
-  if (apiConfigService.getIsCacheWarmerFeatureActive()) {
-    const cacheWarmerApp = await NestFactory.create(CacheWarmerModule);
-    await cacheWarmerApp.listen(apiConfigService.getCacheWarmerFeaturePort());
-  }
-
-  if (apiConfigService.getIsTransactionProcessorFeatureActive()) {
-    const transactionProcessorApp = await NestFactory.create(TransactionProcessorModule);
-    await transactionProcessorApp.listen(apiConfigService.getTransactionProcessorFeaturePort());
   }
 
   if (apiConfigService.getIsQueueWorkerFeatureActive()) {
