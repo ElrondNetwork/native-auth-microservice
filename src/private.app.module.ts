@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { CacheController } from './endpoints/caching/cache.controller';
 import { ApiMetricsController } from './common/metrics/api.metrics.controller';
 import { DynamicModuleUtils } from './utils/dynamic.module.utils';
 import { LoggingModule } from '@elrondnetwork/erdnest';
@@ -19,7 +18,6 @@ import { ApiConfigModule } from './common/api-config/api.config.module';
   ],
   controllers: [
     ApiMetricsController,
-    CacheController,
   ],
 })
 export class PrivateAppModule { }

@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "src/endpoints/users/entities/user.entity";
 import { ApiConfigModule } from "../api-config/api.config.module";
 import { ApiConfigService } from "../api-config/api.config.service";
 
@@ -11,16 +10,16 @@ import { ApiConfigService } from "../api-config/api.config.service";
       useFactory: (apiConfigService: ApiConfigService) => ({
         type: 'mysql',
         ...apiConfigService.getDatabaseConnection(),
-        entities: [User],
+        entities: [],
         keepConnectionAlive: true,
         synchronize: true,
       }),
       inject: [ApiConfigService],
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([]),
   ],
   exports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([]),
   ],
 })
 export class DatabaseModule { }
