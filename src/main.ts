@@ -8,7 +8,6 @@ import { PrivateAppModule } from './private.app.module';
 import { PublicAppModule } from './public.app.module';
 import * as bodyParser from 'body-parser';
 import { Logger, NestInterceptor } from '@nestjs/common';
-import { QueueWorkerModule } from './workers/queue.worker.module';
 import cookieParser from 'cookie-parser';
 import { LoggingInterceptor, CachingInterceptor, CachingService, LoggerInitializer, MetricsService, JwtAuthenticateGlobalGuard } from '@elrondnetwork/erdnest';
 import { ErdnestConfigServiceImpl } from './common/api-config/erdnest.config.service.impl';
@@ -74,11 +73,6 @@ async function bootstrap() {
   if (apiConfigService.getIsPrivateApiFeatureActive()) {
     const privateApp = await NestFactory.create(PrivateAppModule);
     await privateApp.listen(apiConfigService.getPrivateApiFeaturePort());
-  }
-
-  if (apiConfigService.getIsQueueWorkerFeatureActive()) {
-    const queueWorkerApp = await NestFactory.create(QueueWorkerModule);
-    await queueWorkerApp.listen(8000);
   }
 
   const logger = new Logger('Bootstrapper');
