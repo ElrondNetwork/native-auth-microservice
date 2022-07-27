@@ -7,12 +7,16 @@ import { LoggingModule } from '@elrondnetwork/erdnest';
 import { EndpointsServicesModule } from './endpoints/endpoints.services.module';
 import { EndpointsControllersModule } from './endpoints/endpoints.controllers.module';
 import { DynamicModuleUtils } from './utils/dynamic.module.utils';
+import { NoSQLDatabaseModule } from './common/database/nosql.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
     LoggingModule,
     EndpointsServicesModule,
     EndpointsControllersModule,
+    NoSQLDatabaseModule,
+    MongooseModule.forFeature([]),
   ],
   providers: [
     DynamicModuleUtils.getNestJsApiConfigService(),
