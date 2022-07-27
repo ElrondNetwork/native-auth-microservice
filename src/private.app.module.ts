@@ -14,7 +14,6 @@ import { ApiConfigModule } from './common/api-config/api.config.module';
   ],
   providers: [
     DynamicModuleUtils.getNestJsApiConfigService(),
-    DynamicModuleUtils.getPubSubService(),
   ],
   controllers: [
     ApiMetricsController,

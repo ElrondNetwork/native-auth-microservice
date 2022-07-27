@@ -9,11 +9,8 @@ import { PublicAppModule } from './public.app.module';
 import * as bodyParser from 'body-parser';
 import { Logger, NestInterceptor } from '@nestjs/common';
 import { QueueWorkerModule } from './workers/queue.worker.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { SocketAdapter } from './websockets/socket.adapter';
 import cookieParser from 'cookie-parser';
 import { LoggingInterceptor, CachingInterceptor, CachingService, LoggerInitializer, MetricsService, JwtAuthenticateGlobalGuard } from '@elrondnetwork/erdnest';
-import { PubSubListenerModule } from './common/pubsub/pub.sub.listener.module';
 import { ErdnestConfigServiceImpl } from './common/api-config/erdnest.config.service.impl';
 
 async function bootstrap() {
@@ -88,30 +85,8 @@ async function bootstrap() {
 
   LoggerInitializer.initialize(logger);
 
-  const pubSubApp = await NestFactory.createMicroservice<MicroserviceOptions>(
-    PubSubListenerModule,
-    {
-      transport: Transport.REDIS,
-      options: {
-        url: `redis://${apiConfigService.getRedisUrl()}:6379`,
-        retryAttempts: 100,
-        retryDelay: 1000,
-        retry_strategy: function () {
-          return 1000;
-        },
-      },
-    },
-  );
-  pubSubApp.useLogger(pubSubApp.get(WINSTON_MODULE_NEST_PROVIDER));
-  pubSubApp.useWebSocketAdapter(new SocketAdapter(pubSubApp));
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  pubSubApp.listen();
-
   logger.log(`Public API active: ${apiConfigService.getIsPrivateApiFeatureActive()}`);
   logger.log(`Private API active: ${apiConfigService.getIsPrivateApiFeatureActive()}`);
-  logger.log(`Transaction processor active: ${apiConfigService.getIsTransactionProcessorFeatureActive()}`);
-  logger.log(`Cache warmer active: ${apiConfigService.getIsCacheWarmerFeatureActive()}`);
-  logger.log(`Queue worker active: ${apiConfigService.getIsQueueWorkerFeatureActive()}`);
 }
 
 bootstrap();
